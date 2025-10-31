@@ -65,7 +65,7 @@ def get_stops_for_trip(trip_id)->list:
     trip_stops = stop_times_df[stop_times_df['trip_id'] == trip_id].sort_values('stop_sequence')
     merged = pd.merge(trip_stops, stops_df, on='stop_id', how='left')
 
-    stop_list = [{'stop_id': row['stop_id'], 'stop_name': row['stop_name']} for _, row in merged.iterrows()]
+    stop_list = [{'id': str( row['stop_id']), 'name': row['stop_name']} for _, row in merged.iterrows()]
 
     return stop_list
 
@@ -107,6 +107,8 @@ def get_all_unique_trip_headsign()->list[dict]:
     distinct_merged = merged[['route_short_name','trip_headsign']].drop_duplicates()
     external_display_data_list = [ {'route_number' : row['route_short_name'], 'headsign' : row['trip_headsign']} for _, row in distinct_merged.iterrows()]
     return external_display_data_list
+
+
 
 
 

@@ -1,15 +1,15 @@
 import datetime
 
 
-
-dt = datetime.datetime.now(datetime.timezone.utc)
-current_datetime = dt.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"   #idő   utc formátumban
-
+def _now_iso_utc_ms() -> str:
+    dt = datetime.datetime.now(datetime.timezone.utc)
+    return dt.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"    #idő   utc formátumban
+#print(_now_iso_utc_ms())
 
 # belső kijelző kijelző mqtt json forma
 def internal_display_json_format(message_number,trip_id,route_data:dict,stop_list:list,first_stop,last_stop,head_sign="Nem szállít utasokat"):
     return {
-            "messageTime": current_datetime,
+            "messageTime": _now_iso_utc_ms(),
             "messageNumber": message_number,
             "data": {
                 "trip": {
@@ -35,10 +35,14 @@ def internal_display_json_format(message_number,trip_id,route_data:dict,stop_lis
             }
         }
 
+
+
+
+
 #külső kijelző mqtt json forma
 def external_display_json_format(message_number,route_short_name:str,head_sign="Nem szállít utasokat"):
     return {
-        "messageTime" : current_datetime,
+        "messageTime" : _now_iso_utc_ms(),
         "messageNumber": message_number,
         "data" : {
             "routeNumber": route_short_name,
@@ -49,7 +53,7 @@ def external_display_json_format(message_number,route_short_name:str,head_sign="
 #validátor mqtt json forma
 def validator_json_format(message_number,route_id:str,route_short_name:str,trip_id):
     return {
-        "messageTime": current_datetime,
+        "messageTime": _now_iso_utc_ms(),
         "messageNumber": message_number,
         "data" : {
             "routeId": route_id,
@@ -58,3 +62,38 @@ def validator_json_format(message_number,route_id:str,route_short_name:str,trip_
         }
     }
 
+def internal_display_whiteout_route_id_json_formatter(message_number,headsign):
+    var=    {
+        "messageTime": _now_iso_utc_ms(),
+        "messageNumber": message_number,
+        "data": {
+            "trip": None,
+            "route": None,
+            "headsign": headsign,
+            "departureTime": None,
+            "actualStop": None,
+            "nextStops": None,
+            "status": None
+        }
+    }
+    return var
+
+
+def connection_status(is_online:bool):
+    return {"online": is_online}
+
+def trip_status(headsign:str) ->dict:
+    return {
+     "tripId": None,
+     "tripHeadsign": headsign,
+     "routeId": None,
+     "routeShortName": None,
+     "stopId": None,
+     "stopName": None,
+     "vehicleLicensePlate": "AIGY507"
+     }
+
+
+
+if __name__ == "__main__":
+    print(_now_iso_utc_ms())

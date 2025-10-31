@@ -5,22 +5,20 @@ from utils import get_data_from_gtfs as data, json_formatter as jf, mqtt_message
 
 #egy gtfs alapján végig megy az összes trip_id-n és elküldi mqtt-n a hozzá tartozó adatokat a megfelelő csatornákon.
 if __name__ == "__main__":
-    print(f"Current working directory: {os.getcwd()}")
+    #print(f"Current working directory: {os.getcwd()}")
     trip_id_list=[]
 
     #trip_id_list.append(data.get_trip_ids())
     #trip_id_list.append(data.get_trip_id_with_longest_headsign())
-    trip_id_list.append('66fc6c82-fb70-4a22-aa83-1357bf460bf3')
-
+    #trip_id_list.append('32-2010-tansz-1')
+    trip_id_list=data.get_trip_ids()   #összes aznosító
 
     external_message_number=1
     validator_message_number=1
     internal_message_number = 1
 
 
-
-
-    for trip_id in trip_id_list[:2]:
+    for trip_id in trip_id_list[50:]:
         route_data=data.get_route_data_by_trip_id(trip_id)  #egy útvonal adatai adatai egy trip_id alapján
         stop_list=data.get_stops_for_trip(trip_id)  #egy járathoz tardozó megállók {{azonosító},{név}}  trip_id alapján
         head_sign=data.get_trip_headsign_by_trip_id(trip_id) #egy járathoz tartozó fő kijelző szöveg adat
@@ -41,6 +39,7 @@ if __name__ == "__main__":
             ms.internal_display(internal_message)  #üzenet küldés belső kijelzőre
             stop_list.pop(0)  #a megállók listából kiveszi a legelső elemet
             internal_message_number+=1
-            time.sleep(5)
+            time.sleep(20)   #belső üzenetek közötti idő
         external_message_number+=1
+
         validator_message_number+=1

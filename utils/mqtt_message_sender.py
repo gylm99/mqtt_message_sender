@@ -8,10 +8,10 @@ from datetime import datetime
 from paho.mqtt.client import Client
 
 #itt kell megadni az mqtt kapcsolathoz szükséges adatokat
-broker_url = "38.242.204.225"
+broker_url = "192.168.1.1"
 broker_port = 1883
-user_name="treestar"
-password="t4Yx8:a/21x~5CaMX0T9dyKE>"
+user_name=""
+password=""
 client=mqtt.Client(protocol=mqtt.MQTTv311)
 client.username_pw_set(user_name,password)
 
@@ -47,6 +47,16 @@ def internal_display(data:dict):
 def validator(data:dict):
     validator_topic="realcity/drive-onboard/validator-trip-status/v1"
     client.publish(topic=validator_topic, payload=json.dumps(data), qos=1, retain=True)
+
+def connection_status(data:dict):
+    connection_topic="realcity/drive-onboard/connection-status/v1"
+    client.publish(topic=connection_topic, payload=json.dumps(data), qos=1, retain=True)
+
+def trip_status(data:dict):
+    trip_topic="realcity/trip-status"
+    client.publish(topic=trip_topic, payload=json.dumps(data), qos=1, retain=True)
+
+
 
 
 

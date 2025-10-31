@@ -3,7 +3,8 @@ import time
 import utils.mqtt_message_sender as ms
 import utils.get_data_from_gtfs as data
 import utils.json_formatter  as jf
-from utils.mqtt_message_sender import external_display
+from utils.json_formatter import validator_json_format
+from utils.mqtt_message_sender import external_display, validator
 
 
 def all_trips():
@@ -15,7 +16,7 @@ def all_trips():
         head_sign = data.thury_busz_headsign_forming(trip_id)
         external_json = jf.external_display_json_format(external_message_number, route_data['short_name'], head_sign)
         ms.external_display(external_json)
-        time.sleep(5)
+        time.sleep(60)
         external_message_number += 1
 
 def all_unique_trip_headsign_mqtt_message():
@@ -24,7 +25,7 @@ def all_unique_trip_headsign_mqtt_message():
     for external_data in data_list:
         external_json = jf.external_display_json_format(external_message_number,external_data['route_number'],external_data['headsign'])
         ms.external_display(external_json)
-        time.sleep(1)
+        time.sleep(10)
         external_message_number+=1
 
 
@@ -33,6 +34,7 @@ def all_unique_trip_headsign_mqtt_message():
 
 
 
+
 if __name__ == '__main__':
-    #all_trips()
+   # all_trips()
     all_unique_trip_headsign_mqtt_message()
